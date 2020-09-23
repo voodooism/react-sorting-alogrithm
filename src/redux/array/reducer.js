@@ -1,16 +1,19 @@
 import {
   SET_ARRAY,
   GENERATE_ARRAY,
-  CHANGE_ALGORITHM
+  CHANGE_ALGORITHM, START_SORTING, STOP_SORTING, SAVE_TIMEOUTS
 } from "./types";
 
-import { generateArray, RANDOM_ARRAY } from "./generator/arrayFacroty";
+import { createArray, RANDOM_ARRAY } from "./generator/arrayFacroty";
 import { getSortFunction, BUBBLE_SORT} from "./sort/algorithmFactory";
+import {createArrayWithNewClassNames} from "./generator/generator";
 
 const initialState = {
   type: RANDOM_ARRAY,
   sortFunction: getSortFunction(BUBBLE_SORT),
-  elements: generateArray(RANDOM_ARRAY)
+  elements: createArray(RANDOM_ARRAY),
+  isSortingProcessStarted: false,
+  timeouts: []
 }
 
 const arrayReducer = (state = initialState, action) => {
@@ -25,12 +28,30 @@ const arrayReducer = (state = initialState, action) => {
       return {
         ...state,
         type,
-        elements: generateArray(type)
+        elements: createArray(type)
       }
     case SET_ARRAY:
       return {
         ...state,
         elements: action.payload
+      }
+    case START_SORTING:
+      return {
+        ...state,
+        isSortingProcessStarted: true,
+        elements: createArrayWithNewClassNames(state.elements, '', ...state.elements.keys())
+      }
+    case STOP_SORTING:
+      state.timeouts.forEach((timeoutId) => clearTimeout(timeoutId));
+      return {
+        ...state,
+        timeouts: [],
+        isSortingProcessStarted: false,
+      }
+    case SAVE_TIMEOUTS:
+      return {
+        ...state,
+        timeouts: action.payload
       }
     default:
       return state;

@@ -10,11 +10,13 @@ export const generateArrayOfRandomValues = ({ min = 5, max = 80, count = 16 } = 
 }
 
 export const generateArrayOfFewUniqueRandomValues = ({ min = 5, max = 80, count = 16 } = {}) => {
+  const NUMBER_OF_UNIQUE_ELEMENTS = 4;
+
   const array = [];
 
   const uniqueValuesPool = [];
 
-  while (uniqueValuesPool.length < 4) {
+  while (uniqueValuesPool.length < NUMBER_OF_UNIQUE_ELEMENTS) {
     const value = Math.floor(Math.random() * (max - min + 1) + min);
 
     if (!uniqueValuesPool.includes(value)) {
@@ -23,7 +25,8 @@ export const generateArrayOfFewUniqueRandomValues = ({ min = 5, max = 80, count 
   }
 
   for(let i = 0; i < count; i++) {
-    const value = uniqueValuesPool[Math.floor(Math.random() * 4)];
+    const randomIndex = Math.floor(Math.random() * NUMBER_OF_UNIQUE_ELEMENTS);
+    const value = uniqueValuesPool[randomIndex];
     array[i] = createArrayElement(value);
   }
 
@@ -39,9 +42,8 @@ export const generateArrayOfNearlySortedValues = (payload = {}) => {
   for (let i = 0; i < countOfSwappedElements; i++) {
     const firstIndex = Math.floor(Math.random()* array.length);
     const secondIndex = Math.floor(Math.random()* array.length);
-    let swap = array[firstIndex];
-    array[firstIndex] = array[secondIndex];
-    array[secondIndex] = swap;
+
+    [array[firstIndex], array[secondIndex]] = [array[secondIndex], array[firstIndex]];
   }
 
   return array;
@@ -60,7 +62,7 @@ export const createArrayElement  = (value, className = '') => {
 }
 
 export const createArrayWithNewClassNames = (array, className, ...indexes) => {
-  const newArray = array.slice();
+  const newArray = [...array];
 
   for (const index of indexes) {
     if (typeof newArray[index] !== 'undefined') {

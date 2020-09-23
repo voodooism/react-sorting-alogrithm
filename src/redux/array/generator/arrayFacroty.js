@@ -13,7 +13,7 @@ export const REVERSED_ARRAY = 'reversed';
 
 export const FEW_UNIQUE_ARRAY = 'few-unique';
 
-export const generateArray = (type = RANDOM_ARRAY) => {
+export const createArray = (type = RANDOM_ARRAY) => {
   switch (type) {
     case RANDOM_ARRAY:
       return generateArrayOfRandomValues();

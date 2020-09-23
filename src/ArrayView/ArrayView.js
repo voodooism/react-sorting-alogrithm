@@ -2,12 +2,12 @@ import React from "react";
 import './ArrayView.css';
 import ArrayElement from "./ArrayElement/ArrayElement";
 import {useDispatch, useSelector} from "react-redux";
-import {generateArray, setArray} from "../redux/array/actions";
+import {generateArray, sortArray, stopSorting} from "../redux/array/actions";
 
 export default function ArrayView() {
 
   const elements = useSelector(state => state.array.elements);
-  const sortFunction = useSelector(state => state.array.sortFunction);
+  const isSortingProcessStarted = useSelector(state => state.array.isSortingProcessStarted);
 
   const dispatch = useDispatch();
 
@@ -16,21 +16,16 @@ export default function ArrayView() {
       (el, id) => <ArrayElement elementValue={el.value} key={id} className={el.className}/>
     );
 
-  const onSort = (elements, sortFunction) => {
-    const events = sortFunction(elements);
-
-    for (let i = 0; i < events.length ; i++) {
-      setTimeout(() => dispatch(setArray(events[i])), 400 * i);
-    }
-  }
+  const startSortingButton = <button onClick={() => dispatch(sortArray())}>Start sorting</button>
+  const stopSortingButton = <button onClick={() => dispatch(stopSorting())}>Stop sorting</button>
 
   return (
     <>
       <div className="array-container">
         {arrayElements}
       </div>
-      <button onClick={() => onSort(elements, sortFunction)}>Sort array</button>
-      <button onClick={() => dispatch(generateArray())}>Generate new array</button>
+      {isSortingProcessStarted ? stopSortingButton : startSortingButton}
+      <button onClick={() => dispatch(generateArray())} disabled={isSortingProcessStarted}>Generate new array</button>
     </>
   );
 }

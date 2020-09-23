@@ -1,5 +1,5 @@
 import React from 'react';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {changeAlgorithm, generateArray} from "../redux/array/actions";
 import {
   RANDOM_ARRAY,
@@ -14,13 +14,17 @@ import {
 } from "../redux/array/sort/algorithmFactory";
 
 export default function Header() {
+  const isSortingProcessStarted = useSelector(state => state.array.isSortingProcessStarted);
   const dispatch = useDispatch();
 
   return (
     <div>
       <label>
         Array type
-        <select onChange={(e) => dispatch(generateArray(e.target.value))}>
+        <select
+          onChange={(e) => dispatch(generateArray(e.target.value))}
+          disabled={isSortingProcessStarted}
+        >
           <option value={RANDOM_ARRAY}>Random</option>
           <option value={NEARLY_SORTED_ARRAY}>Nearly sorted</option>
           <option value={REVERSED_ARRAY}>Reversed</option>
@@ -29,7 +33,10 @@ export default function Header() {
       </label>
       <label>
         Algorithm
-        <select onChange={(e) => dispatch(changeAlgorithm(e.target.value))}>
+        <select
+          onChange={(e) => dispatch(changeAlgorithm(e.target.value))}
+          disabled={isSortingProcessStarted}
+        >
           <option value={BUBBLE_SORT}>Bubble sort</option>
           <option value={SELECTION_SORT}>Selection sort</option>
           <option value={INSERTION_SORT}>Insertion sort</option>

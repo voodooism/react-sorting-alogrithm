@@ -4,7 +4,7 @@ export const selectionSort = (elements) => {
   const events = [];
 
   const length = elements.length;
-  const newElements = elements.slice();
+  const newElements = [...elements];
 
   for (let i = 0; i < length - 1; i++) {
     let minIdx = i;
@@ -15,10 +15,7 @@ export const selectionSort = (elements) => {
         minIdx = j;
       }
     }
-
-    const buffer = newElements[i];
-    newElements[i] = newElements[minIdx];
-    newElements[minIdx] = buffer;
+    [newElements[i], newElements[minIdx]] = [newElements[minIdx], newElements[i]];
 
     events.push(createArrayWithNewClassNames(newElements, 'swap', i, minIdx))
 
