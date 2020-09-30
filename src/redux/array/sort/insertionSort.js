@@ -1,7 +1,7 @@
-import {createArrayWithNewClassNames} from "../generator/generator";
+import {compareTwoElements, finishSorting, swapTwoElements} from "../reducer";
 
 export const insertionSort = (elements) => {
-  const events = [];
+  const actions = [];
 
   const length = elements.length;
   const newElements = [...elements];
@@ -10,11 +10,12 @@ export const insertionSort = (elements) => {
     let j = i;
 
     while(j > 0) {
-      events.push(createArrayWithNewClassNames(newElements, 'comparing', j, j - 1));
+      actions.push(compareTwoElements({firstIndex: j, secondIndex: j - 1}));
+
       if (newElements[j].value < newElements[j-1].value) {
         [newElements[j], newElements[j-1]] = [newElements[j-1], newElements[j]];
 
-        events.push(createArrayWithNewClassNames(newElements, 'swap', j, j - 1))
+        actions.push(swapTwoElements({firstIndex: j, secondIndex: j - 1}));
 
       } else {
         break;
@@ -23,7 +24,7 @@ export const insertionSort = (elements) => {
     }
   }
 
-  events.push(createArrayWithNewClassNames(newElements, 'sorted', ...newElements.keys()));
+  actions.push(finishSorting());
 
-  return events;
+  return actions;
 }

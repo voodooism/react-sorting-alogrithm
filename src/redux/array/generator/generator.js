@@ -54,21 +54,9 @@ export const generateReversedArray = (payload = {}) => {
     .sort((a, b) => b.value - a.value)
 }
 
-export const createArrayElement  = (value, className = '') => {
+const createArrayElement  = (value, className = '') => {
   return {
     value,
     className
   }
-}
-
-export const createArrayWithNewClassNames = (array, className, ...indexes) => {
-  const newArray = [...array];
-
-  for (const index of indexes) {
-    if (typeof newArray[index] !== 'undefined') {
-      newArray[index] = { ...array[index], className};
-    }
-  }
-
-  return newArray;
 }

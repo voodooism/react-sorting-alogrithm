@@ -1,7 +1,7 @@
-import {createArrayWithNewClassNames} from "../generator/generator";
+import {compareTwoElements, finishSorting, swapTwoElements} from "../reducer";
 
 export const selectionSort = (elements) => {
-  const events = [];
+  const actions = [];
 
   const length = elements.length;
   const newElements = [...elements];
@@ -10,26 +10,18 @@ export const selectionSort = (elements) => {
     let minIdx = i;
 
     for (let j = i + 1; j < length; j++) {
-      events.push(createCompareEvent(newElements, j, i, minIdx));
+      actions.push(compareTwoElements({firstIndex: j, secondIndex: i, focused: minIdx}));
+
       if (newElements[j].value < newElements[minIdx].value) {
         minIdx = j;
       }
     }
     [newElements[i], newElements[minIdx]] = [newElements[minIdx], newElements[i]];
 
-    events.push(createArrayWithNewClassNames(newElements, 'swap', i, minIdx))
-
+    actions.push(swapTwoElements({firstIndex: i, secondIndex: minIdx}));
   }
 
-  events.push(createArrayWithNewClassNames(newElements, 'sorted', ...newElements.keys()));
+  actions.push(finishSorting());
 
-  return events;
-}
-
-const createCompareEvent = (elements, i, j, focused) => {
-  const newElements = createArrayWithNewClassNames(elements, 'comparing', i, j);
-
-  newElements[focused] = { ...elements[focused], className: 'focused' }
-
-  return newElements;
+  return actions;
 }

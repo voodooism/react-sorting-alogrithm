@@ -5,23 +5,22 @@ import {
   generateReversedArray
 } from "./generator";
 
-export const RANDOM_ARRAY = 'random';
+export const ArrayTypes = {
+  RANDOM_ARRAY: 'random',
+  NEARLY_SORTED_ARRAY: 'nearly',
+  REVERSED_ARRAY: 'reversed',
+  FEW_UNIQUE_ARRAY: 'few-unique'
+}
 
-export const NEARLY_SORTED_ARRAY = 'nearly';
-
-export const REVERSED_ARRAY = 'reversed';
-
-export const FEW_UNIQUE_ARRAY = 'few-unique';
-
-export const createArray = (type = RANDOM_ARRAY) => {
+export const createArray = (type = ArrayTypes.RANDOM_ARRAY) => {
   switch (type) {
-    case RANDOM_ARRAY:
+    case ArrayTypes.RANDOM_ARRAY:
       return generateArrayOfRandomValues();
-    case NEARLY_SORTED_ARRAY:
+    case ArrayTypes.NEARLY_SORTED_ARRAY:
       return generateArrayOfNearlySortedValues();
-    case REVERSED_ARRAY:
+    case ArrayTypes.REVERSED_ARRAY:
       return generateReversedArray();
-    case FEW_UNIQUE_ARRAY:
+    case ArrayTypes.FEW_UNIQUE_ARRAY:
       return generateArrayOfFewUniqueRandomValues();
     default:
       throw new Error(`Unexpected array type: ${type}`);

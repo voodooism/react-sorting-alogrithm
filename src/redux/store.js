@@ -1,18 +1,12 @@
 import arrayReducer from "./array/reducer";
-import { createStore, combineReducers, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
-
-import { composeWithDevTools } from 'redux-devtools-extension';
+import {configureStore, combineReducers} from "@reduxjs/toolkit";
 
 const rootReducer = combineReducers({
   array: arrayReducer
 });
 
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(
-    applyMiddleware(thunk)
-  )
-);
+const store = configureStore({
+  reducer: rootReducer
+});
 
 export default store;

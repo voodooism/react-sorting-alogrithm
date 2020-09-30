@@ -1,7 +1,7 @@
-import {createArrayWithNewClassNames} from "../generator/generator";
+import { compareTwoElements, swapTwoElements, finishSorting } from "../reducer";
 
 export const bubbleSort = (elements) => {
-  const events = [];
+  const actions = [];
 
   const length = elements.length;
   const newElements = [...elements];
@@ -9,11 +9,11 @@ export const bubbleSort = (elements) => {
   for (let i = 0; i < length - 1; i++) {
     let swapped = false;
     for (let j = 0; j < length - i - 1; j++) {
-      events.push(createArrayWithNewClassNames(newElements, 'comparing', j, j + 1));
+      actions.push(compareTwoElements({firstIndex: j, secondIndex: j + 1}));
       if (newElements[j].value > newElements[j + 1].value) {
         [newElements[j], newElements[j + 1]] = [newElements[j + 1], newElements[j]];
 
-        events.push(createArrayWithNewClassNames(newElements, 'swap', j, j + 1))
+        actions.push(swapTwoElements({firstIndex: j, secondIndex: j + 1}));
 
         swapped = true;
       }
@@ -24,7 +24,7 @@ export const bubbleSort = (elements) => {
     }
   }
 
-  events.push(createArrayWithNewClassNames(newElements, 'sorted', ...newElements.keys()));
+  actions.push(finishSorting())
 
-  return events;
+  return actions;
 }

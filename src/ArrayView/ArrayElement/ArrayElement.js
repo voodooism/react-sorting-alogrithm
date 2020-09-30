@@ -1,7 +1,6 @@
 import React from "react";
 import './ArrayElement.css';
-
-const classNames = require('classnames');
+import classNames from 'classnames';
 
 export default function ArrayElement({ elementValue, className = ''}) {
   const elementClass = classNames('array-element', className);
