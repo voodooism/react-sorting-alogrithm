@@ -6,7 +6,7 @@ export const insertionSort = (elements) => {
   const length = elements.length;
   const newElements = [...elements];
 
-  for (let i = 1; i < length ; i++) {
+  for (let i = 1; i < length; i++) {
     let j = i;
 
     while(j > 0) {

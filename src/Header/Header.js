@@ -1,13 +1,14 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {changeAlgorithm, generateArray} from "../redux/array/reducer";
+import {changeAlgorithm, generateArray, setSortingSpeed} from "../redux/array/reducer";
 import {ArrayTypes} from "../redux/array/generator/arrayFacroty";
 import {algorithms} from "../redux/array/sort/algorithmFactory";
 
 export default function Header() {
   const {
     isStarted: isSortingProcessStarted,
-    algorithm: selectedAlgorithm
+    algorithm: selectedAlgorithm,
+    speed: sortingSpeed
   } = useSelector(state => state.array.sorting);
 
   const dispatch = useDispatch();
@@ -45,6 +46,19 @@ export default function Header() {
         >
           { algorithmsOptions }
         </select>
+      </label>
+      <label>
+        Sorting speed
+        <input
+          id="sorting-speed"
+          type="range"
+          min={200}
+          max={800}
+          step={150}
+          defaultValue={sortingSpeed}
+          disabled={isSortingProcessStarted}
+          onChange={(e) => dispatch(setSortingSpeed(e.target.value))}
+        />
       </label>
     </div>
   );

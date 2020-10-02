@@ -4,6 +4,10 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 const initialElements = createArray();
 
+const BASE_DELAY_BETWEEN_ANIMATIONS_MS = 1000;
+
+const DEFAULT_SORTING_SPEED_VALUE = 500;
+
 const initialState = {
   array: {
     type: ArrayTypes.RANDOM_ARRAY,
@@ -15,7 +19,8 @@ const initialState = {
     currentState: [...initialElements],
     timeouts: [],
     inversions: undefined,
-    comparisons: undefined
+    comparisons: undefined,
+    speed: BASE_DELAY_BETWEEN_ANIMATIONS_MS - DEFAULT_SORTING_SPEED_VALUE
   }
 }
 
@@ -24,7 +29,7 @@ export const sortArray = createAsyncThunk(
   (payload, {dispatch, getState}) => {
     dispatch(startSorting());
 
-    const { array: { array: {elements}, sorting: {algorithm}}} = getState();
+    const { array: { array: {elements}, sorting: {algorithm, speed}}} = getState();
 
     const sortFunction = getSortFunction(algorithm);
 
@@ -36,7 +41,7 @@ export const sortArray = createAsyncThunk(
     let inversions = 0;
 
     actions.forEach((action, index) => {
-      const timeoutId = setTimeout(() => dispatch(action), 400 * index);
+      const timeoutId = setTimeout(() => dispatch(action), speed * index);
 
       timeouts.push(timeoutId);
 
@@ -49,7 +54,7 @@ export const sortArray = createAsyncThunk(
       }
     });
 
-    timeouts.push(setTimeout(() => dispatch(stopSorting()), 400 * timeouts.length));
+    timeouts.push(setTimeout(() => dispatch(stopSorting()), speed * timeouts.length));
 
     dispatch(saveTimeouts(timeouts));
     dispatch(saveComparisons(comparisons));
@@ -119,6 +124,9 @@ const arraySlice = createSlice({
     },
     saveInversions(state, action) {
       state.sorting.inversions = action.payload;
+    },
+    setSortingSpeed(state, action) {
+      state.sorting.speed = BASE_DELAY_BETWEEN_ANIMATIONS_MS - action.payload
     }
   }
 });
@@ -135,7 +143,8 @@ export const {
   saveInversions,
   compareTwoElements,
   swapTwoElements,
-  finishSorting
+  finishSorting,
+  setSortingSpeed
 } = arraySlice.actions;
 
 export default arraySlice.reducer;
