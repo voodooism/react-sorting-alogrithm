@@ -4,6 +4,7 @@
   align-items: flex-end;
   background: #00B74A;
   width: 15px;
+  transition: background-color .15s;
 }
 
 .array-element.comparing {
