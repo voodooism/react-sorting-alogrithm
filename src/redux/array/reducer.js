@@ -70,7 +70,8 @@ const arraySlice = createSlice({
       state.sorting.algorithm = action.payload;
     },
     generateArray(state, action) {
-      const newArray = createArray(action.payload ?? state.array.type);
+      state.array.type = action.payload ?? state.array.type;
+      const newArray = createArray(state.array.type);
       state.array.elements = [...newArray];
       state.sorting.currentState = [...newArray];
       state.sorting.inversions = undefined;
