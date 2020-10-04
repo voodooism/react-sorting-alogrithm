@@ -1,8 +1,11 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {changeAlgorithm, generateArray, setSortingSpeed} from "../redux/array/reducer";
-import {ArrayTypes} from "../redux/array/generator/arrayFacroty";
+import {changeAlgorithm, generateArray, setSortingSpeed, sortArray, stopSorting} from "../redux/array/reducer";
+import {arrays} from "../redux/array/generator/arrayFacroty";
 import {algorithms} from "../redux/array/sort/algorithmFactory";
+import Select from "./Select/Select";
+import Slider from "./Slider/Slider";
+import {MDBBtn} from "mdbreact";
 
 export default function Header() {
   const {
@@ -13,53 +16,41 @@ export default function Header() {
 
   const dispatch = useDispatch();
 
-  const algorithmsOptions = algorithms.map(
-    (algorithm) =>
-      <option
-        value={algorithm.slug}
-        key={algorithm.slug}
-      >
-        {algorithm.name}
-      </option>
-  );
+  const startSortingButton = <MDBBtn color="light-green" onClick={() => dispatch(sortArray())}>Start sorting</MDBBtn>
+  const stopSortingButton = <MDBBtn color="amber" onClick={() => dispatch(stopSorting())}>Stop sorting</MDBBtn>
 
   return (
     <div>
-      <label>
-        Array type
-        <select
-          onChange={(e) => dispatch(generateArray(e.target.value))}
-          disabled={isSortingProcessStarted}
-        >
-          <option value={ArrayTypes.RANDOM_ARRAY}>Random</option>
-          <option value={ArrayTypes.NEARLY_SORTED_ARRAY}>Nearly sorted</option>
-          <option value={ArrayTypes.REVERSED_ARRAY}>Reversed</option>
-          <option value={ArrayTypes.FEW_UNIQUE_ARRAY}>Few unique</option>
-        </select>
-      </label>
-      <label>
-        Algorithm
-        <select
-          defaultValue={selectedAlgorithm.slug}
-          onChange={(e) => dispatch(changeAlgorithm(e.target.value))}
-          disabled={isSortingProcessStarted}
-        >
-          { algorithmsOptions }
-        </select>
-      </label>
-      <label>
-        Sorting speed
-        <input
-          id="sorting-speed"
-          type="range"
-          min={200}
-          max={800}
-          step={150}
-          defaultValue={sortingSpeed}
-          disabled={isSortingProcessStarted}
-          onChange={(e) => dispatch(setSortingSpeed(e.target.value))}
-        />
-      </label>
+      <Select
+        label="Array type"
+        options={arrays}
+        onChange={(e) => dispatch(generateArray(e.target.value))}
+        disabled={isSortingProcessStarted}
+      />
+      <Select
+        label="Algorithm"
+        options={algorithms}
+        onChange={(e) => dispatch(changeAlgorithm(e.target.value))}
+        disabled={isSortingProcessStarted}
+        defaultValue={selectedAlgorithm.slug}
+      />
+      <Slider
+        label="Sorting speed"
+        min={200}
+        max={800}
+        step={150}
+        defaultValue={sortingSpeed}
+        disabled={isSortingProcessStarted}
+        onChange={(e) => dispatch(setSortingSpeed(e.target.value))}
+      />
+
+      {isSortingProcessStarted ? stopSortingButton : startSortingButton}
+      <MDBBtn
+        color="light-blue"
+        onClick={() => dispatch(generateArray())}
+        disabled={isSortingProcessStarted}>
+        Generate new array
+      </MDBBtn>
     </div>
   );
 }

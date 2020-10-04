@@ -3,8 +3,9 @@
   justify-content: center;
   align-items: flex-end;
   background: #00B74A;
-  width: 15px;
+  width: 1.5em;
   transition: background-color .15s;
+  font-weight: bold;
 }
 
 .array-element.comparing {

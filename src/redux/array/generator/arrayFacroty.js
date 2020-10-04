@@ -12,6 +12,25 @@ export const ArrayTypes = {
   FEW_UNIQUE_ARRAY: 'few-unique'
 }
 
+export const arrays = [
+  {
+    slug: ArrayTypes.RANDOM_ARRAY,
+    name: 'Random'
+  },
+  {
+    slug: ArrayTypes.NEARLY_SORTED_ARRAY,
+    name: 'Nearly sorted'
+  },
+  {
+    slug: ArrayTypes.REVERSED_ARRAY,
+    name: 'Reversed array'
+  },
+  {
+    slug: ArrayTypes.FEW_UNIQUE_ARRAY,
+    name: 'Few unique elements'
+  }
+]
+
 export const createArray = (type = ArrayTypes.RANDOM_ARRAY) => {
   switch (type) {
     case ArrayTypes.RANDOM_ARRAY:
