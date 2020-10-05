@@ -1,4 +1,4 @@
-export const generateArrayOfRandomValues = ({ min = 5, max = 80, count = 16 } = {}) => {
+export const generateArrayOfRandomValues = ({ min = 10, max = 99, count = 16 } = {}) => {
   const array = [];
 
   for(let i = 0; i < count; i++) {
@@ -9,7 +9,7 @@ export const generateArrayOfRandomValues = ({ min = 5, max = 80, count = 16 } = 
   return array;
 }
 
-export const generateArrayOfFewUniqueRandomValues = ({ min = 5, max = 80, count = 16 } = {}) => {
+export const generateArrayOfFewUniqueRandomValues = ({ min = 10, max = 99, count = 16 } = {}) => {
   const NUMBER_OF_UNIQUE_ELEMENTS = 4;
 
   const array = [];

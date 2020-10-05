@@ -5,10 +5,12 @@ import classNames from 'classnames';
 export default function ArrayElement({ elementValue, className = ''}) {
   const elementClass = classNames('array-element', className);
 
+  const heightValue = elementValue * 0.60;
+
   return (
     <div
       className={elementClass}
-      style={{height: elementValue + "vh"}}
+      style={{height: heightValue + "vh"}}
     >
       {elementValue}
     </div>
