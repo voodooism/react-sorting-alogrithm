@@ -8,6 +8,7 @@ export const bubbleSort = (elements) => {
 
   for (let i = 0; i < length - 1; i++) {
     let swapped = false;
+
     for (let j = 0; j < length - i - 1; j++) {
       actions.push(compareTwoElements({firstIndex: j, secondIndex: j + 1}));
       if (newElements[j].value > newElements[j + 1].value) {

@@ -83,15 +83,18 @@ const arraySlice = createSlice({
     compareTwoElements(state, action) {
       const currentState = [...state.array.elements];
       const { firstIndex, secondIndex, focused } = action.payload;
+
       if (focused) {
         currentState[focused] = {...currentState[focused], className: 'focused'};
       }
+
       currentState[firstIndex] = {...currentState[firstIndex], className: 'comparing'};
       currentState[secondIndex] = {...currentState[secondIndex], className: 'comparing'};
+
       state.sorting.currentState = currentState;
     },
     swapTwoElements(state, action) {
-      const {array: {elements}} = state;
+      const { array: {elements} } = state;
       const { firstIndex, secondIndex } = action.payload;
 
       const currentState = [...elements];
