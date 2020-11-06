@@ -2,34 +2,34 @@ import {
   generateArrayOfFewUniqueRandomValues,
   generateArrayOfNearlySortedValues,
   generateArrayOfRandomValues,
-  generateReversedArray
-} from "./generator";
+  generateReversedArray,
+} from './generator';
 
 export const ArrayTypes = {
   RANDOM_ARRAY: 'random',
   NEARLY_SORTED_ARRAY: 'nearly',
   REVERSED_ARRAY: 'reversed',
-  FEW_UNIQUE_ARRAY: 'few-unique'
-}
+  FEW_UNIQUE_ARRAY: 'few-unique',
+};
 
 export const arrays = [
   {
     slug: ArrayTypes.RANDOM_ARRAY,
-    name: 'Random'
+    name: 'Random',
   },
   {
     slug: ArrayTypes.NEARLY_SORTED_ARRAY,
-    name: 'Nearly sorted'
+    name: 'Nearly sorted',
   },
   {
     slug: ArrayTypes.REVERSED_ARRAY,
-    name: 'Reversed array'
+    name: 'Reversed array',
   },
   {
     slug: ArrayTypes.FEW_UNIQUE_ARRAY,
-    name: 'Few unique elements'
-  }
-]
+    name: 'Few unique elements',
+  },
+];
 
 export const createArray = (type = ArrayTypes.RANDOM_ARRAY) => {
   switch (type) {
@@ -44,4 +44,4 @@ export const createArray = (type = ArrayTypes.RANDOM_ARRAY) => {
     default:
       throw new Error(`Unexpected array type: ${type}`);
   }
-}
+};

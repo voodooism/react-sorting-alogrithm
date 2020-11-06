@@ -1,12 +1,12 @@
-import arrayReducer from "./array/reducer";
-import {configureStore, combineReducers} from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import arrayReducer from './array/reducer';
 
 const rootReducer = combineReducers({
-  array: arrayReducer
+  array: arrayReducer,
 });
 
 const store = configureStore({
-  reducer: rootReducer
+  reducer: rootReducer,
 });
 
 export default store;

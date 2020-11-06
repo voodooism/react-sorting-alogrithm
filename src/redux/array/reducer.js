@@ -1,6 +1,8 @@
-import {ArrayTypes, createArray} from "./generator/arrayFacroty";
-import {AlgorithmTypes, getSortFunction} from "./sort/algorithmFactory";
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { ArrayTypes, createArray } from './generator/arrayFacroty';
+import { AlgorithmTypes, getSortFunction } from './sort/algorithmFactory';
+import { EventTypes } from './sort/events';
+import { ArrayElementState } from './generator/generator';
 
 const initialElements = createArray();
 
@@ -11,7 +13,7 @@ const DEFAULT_SORTING_SPEED_VALUE = 500;
 const initialState = {
   array: {
     type: ArrayTypes.RANDOM_ARRAY,
-    elements: [...initialElements]
+    elements: [...initialElements],
   },
   sorting: {
     isStarted: false,
@@ -20,47 +22,9 @@ const initialState = {
     timeouts: [],
     inversions: undefined,
     comparisons: undefined,
-    speed: BASE_DELAY_BETWEEN_ANIMATIONS_MS - DEFAULT_SORTING_SPEED_VALUE
-  }
-}
-
-export const sortArray = createAsyncThunk(
-  'array/sort',
-  (payload, {dispatch, getState}) => {
-    dispatch(startSorting());
-
-    const { array: { array: {elements}, sorting: {algorithm, speed}}} = getState();
-
-    const sortFunction = getSortFunction(algorithm);
-
-    const actions = sortFunction(elements);
-
-    const timeouts = [];
-
-    let comparisons = 0;
-    let inversions = 0;
-
-    actions.forEach((action, index) => {
-      const timeoutId = setTimeout(() => dispatch(action), speed * index);
-
-      timeouts.push(timeoutId);
-
-      if (action.type === compareTwoElements.type) {
-        comparisons++;
-      }
-
-      if (action.type === swapTwoElements.type) {
-        inversions++;
-      }
-    });
-
-    timeouts.push(setTimeout(() => dispatch(stopSorting()), speed * timeouts.length));
-
-    dispatch(saveTimeouts(timeouts));
-    dispatch(saveComparisons(comparisons));
-    dispatch(saveInversions(inversions));
-  }
-)
+    speed: BASE_DELAY_BETWEEN_ANIMATIONS_MS - DEFAULT_SORTING_SPEED_VALUE,
+  },
+};
 
 const arraySlice = createSlice({
   name: 'array',
@@ -69,6 +33,7 @@ const arraySlice = createSlice({
     changeAlgorithm(state, action) {
       state.sorting.algorithm = action.payload;
     },
+
     generateArray(state, action) {
       state.array.type = action.payload ?? state.array.type;
       const newArray = createArray(state.array.type);
@@ -77,64 +42,86 @@ const arraySlice = createSlice({
       state.sorting.inversions = undefined;
       state.sorting.comparisons = undefined;
     },
+
     setArray(state, action) {
       state.array.elements = action.payload;
     },
+
     compareTwoElements(state, action) {
       const currentState = [...state.array.elements];
       const { firstIndex, secondIndex, focused } = action.payload;
 
       if (focused) {
-        currentState[focused] = {...currentState[focused], className: 'focused'};
+        currentState[focused] = { ...currentState[focused], state: ArrayElementState.FOCUSED };
       }
 
-      currentState[firstIndex] = {...currentState[firstIndex], className: 'comparing'};
-      currentState[secondIndex] = {...currentState[secondIndex], className: 'comparing'};
+      currentState[firstIndex] = {
+        ...currentState[firstIndex], state: ArrayElementState.COMPARING,
+      };
+
+      currentState[secondIndex] = {
+        ...currentState[secondIndex], state: ArrayElementState.COMPARING,
+      };
 
       state.sorting.currentState = currentState;
     },
+
     swapTwoElements(state, action) {
-      const { array: {elements} } = state;
+      const { array: { elements } } = state;
       const { firstIndex, secondIndex } = action.payload;
 
       const currentState = [...elements];
 
-      currentState[firstIndex] = {...currentState[firstIndex], className: 'swap'};
-      currentState[secondIndex] = {...currentState[secondIndex], className: 'swap'};
+      currentState[firstIndex] = {
+        ...currentState[firstIndex], state: ArrayElementState.SWAPPED,
+      };
 
-      [currentState[firstIndex], currentState[secondIndex]] = [currentState[secondIndex],  currentState[firstIndex]];
-      [elements[firstIndex], elements[secondIndex]] = [elements[secondIndex],  elements[firstIndex]];
+      currentState[secondIndex] = {
+        ...currentState[secondIndex], state: ArrayElementState.SWAPPED,
+      };
+
+      [currentState[firstIndex], currentState[secondIndex]] = [
+        currentState[secondIndex], currentState[firstIndex],
+      ];
+
+      [elements[firstIndex], elements[secondIndex]] = [elements[secondIndex], elements[firstIndex]];
 
       state.sorting.currentState = currentState;
       state.array.elements = elements;
     },
-    startSorting(state, action) {
+
+    startSorting(state) {
       state.sorting.isStarted = true;
-      state.array.elements.forEach((element) => element.className = '');
+      state.array.elements.forEach((element) => { element.state = ArrayElementState.INITIAL; });
     },
-    stopSorting(state, action) {
+
+    stopSorting(state) {
       state.sorting.timeouts.forEach((timeoutId) => clearTimeout(timeoutId));
       state.sorting.timeouts = [];
       state.sorting.isStarted = false;
     },
-    finishSorting(state, action) {
-      state.sorting.currentState.forEach((el) => el.className = 'sorted');
+
+    finishSorting(state) {
+      state.sorting.currentState.forEach((el) => { el.state = ArrayElementState.SORTED; });
     },
+
     saveTimeouts(state, action) {
-      state.sorting.timeouts = action.payload
+      state.sorting.timeouts = action.payload;
     },
+
     saveComparisons(state, action) {
       state.sorting.comparisons = action.payload;
     },
+
     saveInversions(state, action) {
       state.sorting.inversions = action.payload;
     },
-    setSortingSpeed(state, action) {
-      state.sorting.speed = BASE_DELAY_BETWEEN_ANIMATIONS_MS - action.payload
-    }
-  }
-});
 
+    setSortingSpeed(state, action) {
+      state.sorting.speed = BASE_DELAY_BETWEEN_ANIMATIONS_MS - action.payload;
+    },
+  },
+});
 
 export const {
   changeAlgorithm,
@@ -148,7 +135,66 @@ export const {
   compareTwoElements,
   swapTwoElements,
   finishSorting,
-  setSortingSpeed
+  setSortingSpeed,
 } = arraySlice.actions;
+
+export const sortArray = createAsyncThunk(
+  'array/sort',
+  (payload, { dispatch, getState }) => {
+    dispatch(startSorting());
+
+    const { array: { array: { elements }, sorting: { algorithm, speed } } } = getState();
+
+    const sortFunction = getSortFunction(algorithm);
+
+    const events = sortFunction(elements);
+
+    const timeouts = [];
+
+    let comparisons = 0;
+    let inversions = 0;
+
+    events.forEach((event, index) => {
+      let action;
+
+      switch (event.type) {
+        case EventTypes.COMPARE:
+          action = compareTwoElements(
+            {
+              firstIndex: event.firstIndex,
+              secondIndex: event.secondIndex,
+              focused: event.focusedIndex,
+            },
+          );
+          comparisons += 1;
+          break;
+        case EventTypes.SWAP:
+          action = swapTwoElements(
+            {
+              firstIndex: event.firstIndex,
+              secondIndex: event.secondIndex,
+            },
+          );
+          inversions += 1;
+          break;
+        case EventTypes.FINISH:
+          action = finishSorting();
+          break;
+        default:
+          throw new Error('Undefined sorting event type');
+      }
+
+      const timeoutId = setTimeout(() => dispatch(action), speed * index);
+
+      timeouts.push(timeoutId);
+    });
+
+    timeouts.push(setTimeout(() => dispatch(stopSorting()), speed * timeouts.length));
+
+    dispatch(saveTimeouts(timeouts));
+    dispatch(saveComparisons(comparisons));
+    dispatch(saveInversions(inversions));
+  },
+);
 
 export default arraySlice.reducer;

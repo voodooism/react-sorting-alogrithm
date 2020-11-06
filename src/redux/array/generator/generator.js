@@ -1,13 +1,26 @@
+export const ArrayElementState = {
+  INITIAL: 'initial',
+  COMPARING: 'comparing',
+  SWAPPED: 'swapped',
+  SORTED: 'sorted',
+  FOCUSED: 'focused',
+};
+
+const createArrayElement = (value, state = ArrayElementState.INITIAL) => ({
+  value,
+  state,
+});
+
 export const generateArrayOfRandomValues = ({ min = 10, max = 99, count = 16 } = {}) => {
   const array = [];
 
-  for(let i = 0; i < count; i++) {
+  for (let i = 0; i < count; i += 1) {
     const value = Math.floor(Math.random() * (max - min + 1) + min);
     array[i] = createArrayElement(value);
   }
 
   return array;
-}
+};
 
 export const generateArrayOfFewUniqueRandomValues = ({ min = 10, max = 99, count = 16 } = {}) => {
   const NUMBER_OF_UNIQUE_ELEMENTS = 4;
@@ -24,14 +37,14 @@ export const generateArrayOfFewUniqueRandomValues = ({ min = 10, max = 99, count
     }
   }
 
-  for(let i = 0; i < count; i++) {
+  for (let i = 0; i < count; i += 1) {
     const randomIndex = Math.floor(Math.random() * NUMBER_OF_UNIQUE_ELEMENTS);
     const value = uniqueValuesPool[randomIndex];
     array[i] = createArrayElement(value);
   }
 
   return array;
-}
+};
 
 export const generateArrayOfNearlySortedValues = (payload = {}) => {
   const array = generateArrayOfRandomValues(payload)
@@ -39,24 +52,15 @@ export const generateArrayOfNearlySortedValues = (payload = {}) => {
 
   const countOfSwappedElements = Math.round(array.length * 0.2);
 
-  for (let i = 0; i < countOfSwappedElements; i++) {
-    const firstIndex = Math.floor(Math.random()* array.length);
-    const secondIndex = Math.floor(Math.random()* array.length);
+  for (let i = 0; i < countOfSwappedElements; i += 1) {
+    const firstIndex = Math.floor(Math.random() * array.length);
+    const secondIndex = Math.floor(Math.random() * array.length);
 
     [array[firstIndex], array[secondIndex]] = [array[secondIndex], array[firstIndex]];
   }
 
   return array;
-}
+};
 
-export const generateReversedArray = (payload = {}) => {
-  return generateArrayOfRandomValues(payload)
-    .sort((a, b) => b.value - a.value)
-}
-
-const createArrayElement  = (value, className = '') => {
-  return {
-    value,
-    className
-  }
-}
+export const generateReversedArray = (payload = {}) => generateArrayOfRandomValues(payload)
+  .sort((a, b) => b.value - a.value);

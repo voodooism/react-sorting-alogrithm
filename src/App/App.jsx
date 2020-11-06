@@ -1,19 +1,19 @@
 import React from 'react';
-import {Provider} from "react-redux";
-import store from "../redux/store";
-import ControlPanel from "../ControlPanel/ControlPanel";
-import ArrayView from "../ArrayView/ArrayView";
+import { Provider } from 'react-redux';
+import { MDBCol, MDBContainer, MDBRow } from 'mdbreact';
+import 'mdbreact/dist/css/mdb.css';
+import store from '../redux/store';
+import ControlPanel from '../ControlPanel/ControlPanel';
+import ArrayView from '../ArrayView/ArrayView';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
-import 'mdbreact/dist/css/mdb.css';
-import {MDBCol, MDBContainer, MDBRow} from "mdbreact";
-import SortingInfo from "../SortingInfo/SortingInfo";
+import SortingInfo from '../SortingInfo/SortingInfo';
 
 export default function App() {
   return (
     <Provider store={store}>
       <div className="App">
-        <MDBContainer fluid={true}>
+        <MDBContainer fluid>
           <MDBRow>
             <MDBCol xl="9" lg="8">
               <ArrayView />

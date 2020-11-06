@@ -1,11 +1,15 @@
 import React from 'react';
+import './Slider.css';
 
-export default function Slider({label, min, max, step, defaultValue, disabled, onChange}) {
+export default function Slider({
+  label, id, min, max, step, defaultValue, disabled, onChange,
+}) {
   return (
-    <label style={{width: "100%"}}>
-      {label}
+    <div className="slider-container">
+      <label htmlFor={id}>{label}</label>
       <input
         className="custom-range"
+        id={id}
         type="range"
         min={min}
         max={max}
@@ -14,6 +18,6 @@ export default function Slider({label, min, max, step, defaultValue, disabled, o
         disabled={disabled}
         onChange={onChange}
       />
-    </label>
+    </div>
   );
 }
