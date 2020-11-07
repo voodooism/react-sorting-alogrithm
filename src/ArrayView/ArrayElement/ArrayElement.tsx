@@ -1,9 +1,14 @@
 import React from 'react';
 import './ArrayElement.css';
 import classNames from 'classnames';
-import { ArrayElementState } from '../../redux/array/generator/generator';
+import { ArrayElementState } from '../../redux/array/generator/ArrayFactory';
 
-export default function ArrayElement({ elementValue, state }) {
+interface ArrayElementProps {
+  elementValue: number,
+  state: ArrayElementState
+}
+
+export default function ArrayElement({ elementValue, state }: ArrayElementProps) {
   let className = '';
 
   switch (state) {

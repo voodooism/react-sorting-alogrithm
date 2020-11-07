@@ -1,6 +1,9 @@
-import { compare, swap, finish } from './events';
+import { ArrayElement } from '../generator/ArrayFactory';
+import { SortingEvent } from './Events/types';
+import CompareEvent from './Events/CompareEvent';
+import SwapEvent from './Events/SwapEvent';
 
-const insertionSort = (elements) => {
+const insertionSort = (elements: Array<ArrayElement>): Array<SortingEvent> => {
   const actions = [];
 
   const { length } = elements;
@@ -10,12 +13,16 @@ const insertionSort = (elements) => {
     let j = i;
 
     while (j > 0) {
-      actions.push(compare(j, j - 1));
+      actions.push(
+        new CompareEvent(j, j - 1),
+      );
 
       if (newElements[j].value < newElements[j - 1].value) {
         [newElements[j], newElements[j - 1]] = [newElements[j - 1], newElements[j]];
 
-        actions.push(swap(j, j - 1));
+        actions.push(
+          new SwapEvent(j, j - 1),
+        );
       } else {
         break;
       }
@@ -23,8 +30,6 @@ const insertionSort = (elements) => {
       j -= 1;
     }
   }
-
-  actions.push(finish());
 
   return actions;
 };

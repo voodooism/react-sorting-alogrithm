@@ -1,20 +1,25 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { algorithms } from '../redux/array/sort/algorithmFactory';
-import { arrays } from '../redux/array/generator/arrayFacroty';
+import { algorithms } from '../redux/array/sort/AlgorithmFactory';
+import { arrays } from '../redux/array/generator/ArrayFactory';
 import './SortingInfo.css';
+import { RootState } from '../redux/store';
 
 export default function SortingInfo() {
   const {
     algorithm: currentAlgorithmType,
     comparisons,
     inversions,
-  } = useSelector((state) => state.array.sorting);
+  } = useSelector((state: RootState) => state.array.sorting);
 
-  const { type: currentArrayType } = useSelector((state) => state.array.array);
+  const { type: currentArrayType } = useSelector((state: RootState) => state.array.array);
 
   const currentAlgorithmInfo = algorithms.find((el) => el.slug === currentAlgorithmType);
   const currentArrayInfo = arrays.find((el) => el.slug === currentArrayType);
+
+  if (!currentArrayInfo || !currentAlgorithmInfo) {
+    throw new Error('Something went wrong.');
+  }
 
   return (
     <div className="sorting-info-card">

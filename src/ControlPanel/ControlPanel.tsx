@@ -1,27 +1,46 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   MDBBtn, MDBCol, MDBContainer, MDBRow,
 } from 'mdbreact';
 import {
-  changeAlgorithm, generateArray, setSortingSpeed, sortArray, stopSorting,
+  changeAlgorithm, generateArray, setSortingSpeed, stopSorting,
 } from '../redux/array/reducer';
-import { arrays } from '../redux/array/generator/arrayFacroty';
-import { algorithms } from '../redux/array/sort/algorithmFactory';
+import { arrays, ArrayTypes } from '../redux/array/generator/ArrayFactory';
+import { algorithms, AlgorithmTypes } from '../redux/array/sort/AlgorithmFactory';
 import Select from './Select/Select';
 import Slider from './Slider/Slider';
+import { useAppDispatch, RootState } from '../redux/store';
+import sortArray from '../redux/array/thunks';
 
 export default function ControlPanel() {
   const {
     isStarted: isSortingProcessStarted,
     algorithm: selectedAlgorithm,
     speed: sortingSpeed,
-  } = useSelector((state) => state.array.sorting);
+  } = useSelector((state: RootState) => state.array.sorting);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const startSortingButton = <MDBBtn style={{ width: '100%' }} color="light-green" onClick={() => dispatch(sortArray())}>Start sorting</MDBBtn>;
-  const stopSortingButton = <MDBBtn style={{ width: '100%' }} color="amber" onClick={() => dispatch(stopSorting())}>Stop sorting</MDBBtn>;
+  const startSortingButton = (
+    <MDBBtn
+      style={{ width: '100%' }}
+      color="light-green"
+      onClick={() => dispatch(sortArray())}
+    >
+      Start sorting
+    </MDBBtn>
+  );
+
+  const stopSortingButton = (
+    <MDBBtn
+      style={{ width: '100%' }}
+      color="amber"
+      onClick={() => dispatch(stopSorting())}
+    >
+      Stop sorting
+    </MDBBtn>
+  );
 
   return (
     <MDBContainer fluid className="mx-1 my-2">
@@ -31,7 +50,11 @@ export default function ControlPanel() {
             label="Array type"
             id="array-type"
             options={arrays}
-            onChange={(e) => dispatch(generateArray(e.target.value))}
+            onChange={
+              (e: React.ChangeEvent<HTMLInputElement>) => dispatch(
+                generateArray(e.target.value as ArrayTypes),
+              )
+            }
             disabled={isSortingProcessStarted}
           />
         </MDBCol>
@@ -40,9 +63,13 @@ export default function ControlPanel() {
             label="Algorithm"
             id="algorithm"
             options={algorithms}
-            onChange={(e) => dispatch(changeAlgorithm(e.target.value))}
+            onChange={
+              (e: React.ChangeEvent<HTMLInputElement>) => dispatch(
+                changeAlgorithm(e.target.value as AlgorithmTypes),
+              )
+            }
             disabled={isSortingProcessStarted}
-            defaultValue={selectedAlgorithm.slug}
+            defaultValue={selectedAlgorithm}
           />
         </MDBCol>
         <MDBCol className="d-flex align-items-center" xl="3" md="3" sm="12">
@@ -54,7 +81,11 @@ export default function ControlPanel() {
             step={150}
             defaultValue={sortingSpeed}
             disabled={isSortingProcessStarted}
-            onChange={(e) => dispatch(setSortingSpeed(e.target.value))}
+            onChange={
+              (e: React.ChangeEvent<HTMLInputElement>) => dispatch(
+                setSortingSpeed(Number.parseInt(e.target.value, 10)),
+              )
+            }
           />
         </MDBCol>
         <MDBCol className="d-flex align-items-center" xl="3" md="3" sm="12">

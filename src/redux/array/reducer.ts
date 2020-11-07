@@ -1,16 +1,48 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ArrayTypes, createArray } from './generator/arrayFacroty';
-import { AlgorithmTypes, getSortFunction } from './sort/algorithmFactory';
-import { EventTypes } from './sort/events';
-import { ArrayElementState } from './generator/generator';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  ArrayFactory, ArrayTypes, ArrayElement, ArrayElementState,
+} from './generator/ArrayFactory';
 
-const initialElements = createArray();
+import { AlgorithmTypes } from './sort/AlgorithmFactory';
 
 const BASE_DELAY_BETWEEN_ANIMATIONS_MS = 1000;
 
 const DEFAULT_SORTING_SPEED_VALUE = 500;
 
-const initialState = {
+const arrayFactory = new ArrayFactory(10, 99, 16);
+
+interface ArrayState {
+  array: {
+    type: ArrayTypes,
+    elements: Array<ArrayElement>
+  }
+  sorting: {
+    isStarted: boolean,
+    algorithm: AlgorithmTypes,
+    currentState: Array<ArrayElement>,
+    timeouts: Array<number>,
+    inversions: number | undefined,
+    comparisons: number | undefined
+    speed: number,
+  }
+}
+
+export interface TwoElementOperation {
+  firstIndex: number,
+  secondIndex:number,
+}
+
+interface CompareTwoElements extends TwoElementOperation {
+  focused?: number
+}
+
+interface SwapTwoElements extends TwoElementOperation {}
+
+const initialElements = arrayFactory.createArray(
+  ArrayTypes.RANDOM_ARRAY,
+);
+
+const initialState: ArrayState = {
   array: {
     type: ArrayTypes.RANDOM_ARRAY,
     elements: [...initialElements],
@@ -26,28 +58,31 @@ const initialState = {
   },
 };
 
-const arraySlice = createSlice({
+const arrayReducer = createSlice({
   name: 'array',
   initialState,
   reducers: {
-    changeAlgorithm(state, action) {
+    changeAlgorithm(state, action: PayloadAction<AlgorithmTypes>) {
       state.sorting.algorithm = action.payload;
     },
 
-    generateArray(state, action) {
+    generateArray(state, action: PayloadAction<ArrayTypes|null|undefined>) {
       state.array.type = action.payload ?? state.array.type;
-      const newArray = createArray(state.array.type);
+
+      const newArray = arrayFactory.createArray(state.array.type);
+
       state.array.elements = [...newArray];
       state.sorting.currentState = [...newArray];
+
       state.sorting.inversions = undefined;
       state.sorting.comparisons = undefined;
     },
 
-    setArray(state, action) {
+    setArray(state, action: PayloadAction<Array<ArrayElement>>) {
       state.array.elements = action.payload;
     },
 
-    compareTwoElements(state, action) {
+    compareTwoElements(state, action: PayloadAction<CompareTwoElements>) {
       const currentState = [...state.array.elements];
       const { firstIndex, secondIndex, focused } = action.payload;
 
@@ -66,7 +101,7 @@ const arraySlice = createSlice({
       state.sorting.currentState = currentState;
     },
 
-    swapTwoElements(state, action) {
+    swapTwoElements(state, action: PayloadAction<SwapTwoElements>) {
       const { array: { elements } } = state;
       const { firstIndex, secondIndex } = action.payload;
 
@@ -101,23 +136,23 @@ const arraySlice = createSlice({
       state.sorting.isStarted = false;
     },
 
-    finishSorting(state) {
+    markArrayElementsAsSorted(state) {
       state.sorting.currentState.forEach((el) => { el.state = ArrayElementState.SORTED; });
     },
 
-    saveTimeouts(state, action) {
+    saveTimeouts(state, action: PayloadAction<Array<number>>) {
       state.sorting.timeouts = action.payload;
     },
 
-    saveComparisons(state, action) {
+    saveComparisons(state, action: PayloadAction<number>) {
       state.sorting.comparisons = action.payload;
     },
 
-    saveInversions(state, action) {
+    saveInversions(state, action: PayloadAction<number>) {
       state.sorting.inversions = action.payload;
     },
 
-    setSortingSpeed(state, action) {
+    setSortingSpeed(state, action: PayloadAction<number>) {
       state.sorting.speed = BASE_DELAY_BETWEEN_ANIMATIONS_MS - action.payload;
     },
   },
@@ -134,67 +169,8 @@ export const {
   saveInversions,
   compareTwoElements,
   swapTwoElements,
-  finishSorting,
+  markArrayElementsAsSorted,
   setSortingSpeed,
-} = arraySlice.actions;
+} = arrayReducer.actions;
 
-export const sortArray = createAsyncThunk(
-  'array/sort',
-  (payload, { dispatch, getState }) => {
-    dispatch(startSorting());
-
-    const { array: { array: { elements }, sorting: { algorithm, speed } } } = getState();
-
-    const sortFunction = getSortFunction(algorithm);
-
-    const events = sortFunction(elements);
-
-    const timeouts = [];
-
-    let comparisons = 0;
-    let inversions = 0;
-
-    events.forEach((event, index) => {
-      let action;
-
-      switch (event.type) {
-        case EventTypes.COMPARE:
-          action = compareTwoElements(
-            {
-              firstIndex: event.firstIndex,
-              secondIndex: event.secondIndex,
-              focused: event.focusedIndex,
-            },
-          );
-          comparisons += 1;
-          break;
-        case EventTypes.SWAP:
-          action = swapTwoElements(
-            {
-              firstIndex: event.firstIndex,
-              secondIndex: event.secondIndex,
-            },
-          );
-          inversions += 1;
-          break;
-        case EventTypes.FINISH:
-          action = finishSorting();
-          break;
-        default:
-          throw new Error('Undefined sorting event type');
-      }
-
-      const timeoutId = setTimeout(() => dispatch(action), speed * index);
-
-      timeouts.push(timeoutId);
-    });
-
-    timeouts.push(setTimeout(() => dispatch(stopSorting()), speed * timeouts.length));
-
-    dispatch(saveTimeouts(timeouts));
-    dispatch(saveComparisons(comparisons));
-    dispatch(saveInversions(inversions));
-  },
-);
-
-export default arraySlice.reducer;
+export default arrayReducer.reducer;

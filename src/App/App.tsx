@@ -3,11 +3,11 @@ import { Provider } from 'react-redux';
 import { MDBCol, MDBContainer, MDBRow } from 'mdbreact';
 import 'mdbreact/dist/css/mdb.css';
 import store from '../redux/store';
-import ControlPanel from '../ControlPanel/ControlPanel';
-import ArrayView from '../ArrayView/ArrayView';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
+import ArrayView from '../ArrayView/ArrayView';
 import SortingInfo from '../SortingInfo/SortingInfo';
+import ControlPanel from '../ControlPanel/ControlPanel';
 
 export default function App() {
   return (

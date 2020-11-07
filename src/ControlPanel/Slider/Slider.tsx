@@ -1,9 +1,20 @@
 import React from 'react';
 import './Slider.css';
 
+interface SliderProps {
+  label: string,
+  id: string,
+  min: number,
+  max: number,
+  step: number,
+  defaultValue: number,
+  disabled: boolean,
+  onChange: any,
+}
+
 export default function Slider({
   label, id, min, max, step, defaultValue, disabled, onChange,
-}) {
+}: SliderProps) {
   return (
     <div className="slider-container">
       <label htmlFor={id}>{label}</label>

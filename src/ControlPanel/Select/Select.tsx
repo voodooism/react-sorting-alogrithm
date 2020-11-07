@@ -1,9 +1,22 @@
 import React from 'react';
 import './Select.css';
 
+interface OptionInterface {
+  slug: string,
+  name: string
+}
+interface SelectProps {
+  label: string,
+  id: string,
+  options: Array<OptionInterface>,
+  onChange: any,
+  disabled: boolean,
+  defaultValue?: string,
+}
+
 export default function Select({
   label, id, options, onChange, disabled, defaultValue,
-}) {
+}: SelectProps) {
   const optionElements = options.map((option) => (
     <option
       value={option.slug}
