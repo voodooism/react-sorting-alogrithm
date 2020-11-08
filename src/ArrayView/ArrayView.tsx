@@ -1,10 +1,10 @@
 import React from 'react';
 import './ArrayView.css';
 import { useSelector } from 'react-redux';
-import ArrayElement from './ArrayElement/ArrayElement';
+import { ArrayElement } from './ArrayElement';
 import { RootState } from '../redux/store';
 
-export default function ArrayView() {
+export const ArrayView: React.FC = () => {
   const {
     currentState: elements,
   } = useSelector((state: RootState) => state.array.sorting);
@@ -20,4 +20,4 @@ export default function ArrayView() {
       {arrayElements}
     </div>
   );
-}
+};

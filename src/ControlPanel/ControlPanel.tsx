@@ -6,14 +6,20 @@ import {
 import {
   changeAlgorithm, generateArray, setSortingSpeed, stopSorting,
 } from '../redux/array/reducer';
-import { arrays, ArrayTypes } from '../redux/array/generator/ArrayFactory';
-import { algorithms, AlgorithmTypes } from '../redux/array/sort/AlgorithmFactory';
-import Select from './Select/Select';
-import Slider from './Slider/Slider';
+import { ArrayTypes } from '../redux/array/ArrayFactory/ArrayFactory';
+import { Select } from './Select';
+import { Slider } from './Slider';
 import { useAppDispatch, RootState } from '../redux/store';
 import sortArray from '../redux/array/thunks';
+import { AlgorithmConfig, ArrayConfig } from '../App/configs';
+import { AlgorithmTypes } from '../redux/array/sorting/AlgorithmFactory';
 
-export default function ControlPanel() {
+interface ControlPanelProps {
+  arrays: Array<ArrayConfig>,
+  algorithms: Array<AlgorithmConfig>
+}
+
+export const ControlPanel: React.FC<ControlPanelProps> = ({ arrays, algorithms }) => {
   const {
     isStarted: isSortingProcessStarted,
     algorithm: selectedAlgorithm,
@@ -106,4 +112,4 @@ export default function ControlPanel() {
       </MDBRow>
     </MDBContainer>
   );
-}
+};

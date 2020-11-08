@@ -30,6 +30,8 @@ module.exports = {
   rules: {
     "no-param-reassign": 0,
     "react/require-default-props": "off",
+    "import/prefer-default-export": 0,
+    "react/prop-types": 0
     // "react/prop-types": 0,
     // "no-use-before-define": "off",
     // "@typescript-eslint/no-use-before-define": ["error"],

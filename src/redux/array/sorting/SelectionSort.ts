@@ -1,4 +1,4 @@
-import { ArrayElement } from '../generator/ArrayFactory';
+import { ArrayElement } from '../ArrayFactory/ArrayFactory';
 import { SortingEvent } from './Events/types';
 import CompareEvent from './Events/CompareEvent';
 import SwapEvent from './Events/SwapEvent';

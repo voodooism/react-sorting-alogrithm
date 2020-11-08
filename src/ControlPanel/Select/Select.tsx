@@ -5,6 +5,7 @@ interface OptionInterface {
   slug: string,
   name: string
 }
+
 interface SelectProps {
   label: string,
   id: string,
@@ -14,9 +15,9 @@ interface SelectProps {
   defaultValue?: string,
 }
 
-export default function Select({
+export const Select: React.FC<SelectProps> = ({
   label, id, options, onChange, disabled, defaultValue,
-}: SelectProps) {
+}: SelectProps) => {
   const optionElements = options.map((option) => (
     <option
       value={option.slug}
@@ -41,4 +42,4 @@ export default function Select({
       </select>
     </div>
   );
-}
+};

@@ -1,11 +1,15 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { algorithms } from '../redux/array/sort/AlgorithmFactory';
-import { arrays } from '../redux/array/generator/ArrayFactory';
 import './SortingInfo.css';
 import { RootState } from '../redux/store';
+import { AlgorithmConfig, ArrayConfig } from '../App/configs';
 
-export default function SortingInfo() {
+interface SortingInfoProps {
+  arrays: Array<ArrayConfig>,
+  algorithms: Array<AlgorithmConfig>,
+}
+
+export const SortingInfo: React.FC<SortingInfoProps> = ({ arrays, algorithms }) => {
   const {
     algorithm: currentAlgorithmType,
     comparisons,
@@ -46,4 +50,4 @@ export default function SortingInfo() {
       </p>
     </div>
   );
-}
+};

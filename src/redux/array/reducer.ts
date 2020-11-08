@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   ArrayFactory, ArrayTypes, ArrayElement, ArrayElementState,
-} from './generator/ArrayFactory';
+} from './ArrayFactory/ArrayFactory';
 
-import { AlgorithmTypes } from './sort/AlgorithmFactory';
+import { AlgorithmTypes } from './sorting/AlgorithmFactory';
 
 const BASE_DELAY_BETWEEN_ANIMATIONS_MS = 1000;
 

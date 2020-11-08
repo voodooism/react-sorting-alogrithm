@@ -1,7 +1,7 @@
 import { createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { AppDispatch, RootState } from '../store';
-import { AlgorithmFactory } from './sort/AlgorithmFactory';
-import { EventTypes } from './sort/Events/types';
+import { AlgorithmFactory } from './sorting/AlgorithmFactory';
+import { EventTypes } from './sorting/Events/types';
 import {
   compareTwoElements,
   markArrayElementsAsSorted, saveComparisons, saveInversions,
@@ -20,7 +20,7 @@ void,
   state: RootState
 }
 >(
-  'array/sort',
+  'array/sorting',
   (payload: void, { dispatch, getState }): void => {
     dispatch(startSorting());
 

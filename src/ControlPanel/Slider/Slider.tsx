@@ -12,23 +12,21 @@ interface SliderProps {
   onChange: any,
 }
 
-export default function Slider({
+export const Slider: React.FC<SliderProps> = ({
   label, id, min, max, step, defaultValue, disabled, onChange,
-}: SliderProps) {
-  return (
-    <div className="slider-container">
-      <label htmlFor={id}>{label}</label>
-      <input
-        className="custom-range"
-        id={id}
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        defaultValue={defaultValue}
-        disabled={disabled}
-        onChange={onChange}
-      />
-    </div>
-  );
-}
+}: SliderProps) => (
+  <div className="slider-container">
+    <label htmlFor={id}>{label}</label>
+    <input
+      className="custom-range"
+      id={id}
+      type="range"
+      min={min}
+      max={max}
+      step={step}
+      defaultValue={defaultValue}
+      disabled={disabled}
+      onChange={onChange}
+    />
+  </div>
+);

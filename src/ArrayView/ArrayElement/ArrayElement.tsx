@@ -1,14 +1,14 @@
 import React from 'react';
 import './ArrayElement.css';
 import classNames from 'classnames';
-import { ArrayElementState } from '../../redux/array/generator/ArrayFactory';
+import { ArrayElementState } from '../../redux/array/ArrayFactory/ArrayFactory';
 
 interface ArrayElementProps {
   elementValue: number,
   state: ArrayElementState
 }
 
-export default function ArrayElement({ elementValue, state }: ArrayElementProps) {
+export const ArrayElement: React.FC<ArrayElementProps> = ({ elementValue, state }) => {
   let className = '';
 
   switch (state) {
@@ -43,4 +43,4 @@ export default function ArrayElement({ elementValue, state }: ArrayElementProps)
       {elementValue}
     </div>
   );
-}
+};
